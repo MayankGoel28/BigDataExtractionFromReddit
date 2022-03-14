@@ -17,8 +17,7 @@ subreddits_file = sys.argv[1]
 f = open(f"{subreddits_file}")
 subreddits = f.readlines()
 
-for subreddit in subreddits:
-    subreddit = subreddit.strip()
+def work(subreddit):
     posts = api.search_submissions(
         subreddit=subreddit, limit=50000, safe_exit=True, mem_safe=True
     )
@@ -32,3 +31,12 @@ for subreddit in subreddits:
 
     with open(f"{subreddit}.json", "w") as fout:
         json.dump(final_data, fout)
+
+for subreddit in subreddits:
+    subreddit = subreddit.strip()
+    try:
+        work(subreddit)
+        with open('failed.txt', 'a') as f:
+            f.write(subreddit + '\n')
+    except:
+        continue
